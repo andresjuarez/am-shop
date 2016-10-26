@@ -1,6 +1,6 @@
 (function(){
     angular
-    .module('andresshop', ['ngMaterial', 'ngResource', 'andresshop.users'])
+    .module('andresshop', ['ngMaterial', 'ngResource', 'andresshop.products'])
     .config(function($mdThemingProvider, $mdIconProvider){
 
         $mdIconProvider
