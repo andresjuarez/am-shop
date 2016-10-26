@@ -1,6 +1,6 @@
 (function(){
     angular
-    .module('andresshop', ['ngMaterial', 'ngResource', 'andresshop.products'])
+    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products'])
     .config(function($mdThemingProvider, $mdIconProvider){
 
         $mdIconProvider
@@ -23,5 +23,6 @@
                 hue: '800' // Default is '800'
             });
 
-    });
+    })
+    .constant('_', window._);
 })();

@@ -10,21 +10,44 @@
    * @param avatarsService
    * @constructor
    */
-  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log ) {
+  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _ ) {
     var self = this;
 
+    self.search       = {};
     self.selected     = null;
     self.products     = [];
-    self.selectUser   = selectUser;
+    self.categories   = [];
     self.toggleList   = toggleList;
-    self.makeContact  = makeContact;
+    
+    /*filter categories */
+    self.searchText   = null;
+    self.selectedItem = null;
+    self.categoriesAC = [];
+    self.querySearch   = querySearchCategory;
+
+
 
     // Load all products registered 
 
     productService.get({}).$promise
     .then(function (listProducts) {
-      console.log('listProducts', listProducts);
       self.products = listProducts.products;
+      self.categories = _.pluck(listProducts.categories, 'name');
+
+      for (var i = 0; i < self.products.length; i++){
+        for (var j= 0; j < self.products[i].categories.length; j++){
+          self.products[i].categories[j] = _.result(_.find(listProducts.categories, function(chr) {
+              return chr.categori_id == self.products[i].categories[j];
+            }), 'name');
+        }
+        
+      }
+
+      for (var i = 0; i < self.categories.length; i++) {
+        self.categoriesAC.push({display: self.categories[i], value: self.categories[i]});
+      }
+      console.log('listProducts', self.products);
+      console.log('categoriesAC', self.categoriesAC);
     });
 
     // *********************************
@@ -38,46 +61,25 @@
       $mdSidenav('left').toggle();
     }
 
-    /**
-     * Select the current avatars
-     * @param menuId
-     */
-    function selectUser ( user ) { 
-      self.selected = angular.isNumber(user) ? self.users[user] : user;
+    /*
+    * query search Category for autocomplete
+    */
+
+    function querySearchCategory (query) {
+      var results = query ? self.categoriesAC.filter( createFilterFor(query) ) : self.categoriesAC;
+      return results;
     }
 
     /**
-     * Show the Contact view in the bottom sheet
+     * Create filter function for a query string
      */
-    function makeContact(selectedUser) {
+    function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
 
-        $mdBottomSheet.show({
-          controllerAs  : "vm",
-          templateUrl   : './src/users/view/contactSheet.html',
-          controller    : [ '$mdBottomSheet', ContactSheetController],
-          parent        : angular.element(document.getElementById('content'))
-        }).then(function(clickedItem) {
-          $log.debug( clickedItem.name + ' clicked!');
-        });
+      return function filterFn(state) {
+        return (state.value.indexOf(lowercaseQuery) === 0);
+      };
 
-        /**
-         * User ContactSheet controller
-         */
-        function ContactSheetController( $mdBottomSheet ) {
-          this.user = selectedUser;
-          this.items = [
-            { name: 'Phone'       , icon: 'phone'       , icon_url: 'assets/svg/phone.svg'},
-            { name: 'Twitter'     , icon: 'twitter'     , icon_url: 'assets/svg/twitter.svg'},
-            { name: 'Google+'     , icon: 'google_plus' , icon_url: 'assets/svg/google_plus.svg'},
-            { name: 'Hangout'     , icon: 'hangouts'    , icon_url: 'assets/svg/hangouts.svg'}
-          ];
-          this.contactUser = function(action) {
-            // The actually contact process has not been implemented...
-            // so just hide the bottomSheet
-
-            $mdBottomSheet.hide(action);
-          };
-        }
     }
 
   }

@@ -35,14 +35,22 @@
     <div flex layout="row">
 
         <md-sidenav  ng-click="productCtrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
-          <md-list>
-            <md-list-item ng-repeat="it in productCtrl.users">
-                <md-button ng-click="productCtrl.selectUser(it)" ng-class="{'selected' : it === productCtrl.selected }">
-                  <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
-                  {{it.name}}
-                </md-button>
-            </md-list-item>
-          </md-list>
+          <h3 class="md-title">Filters</h3>
+
+          <md-autocomplete flex required
+              md-input-name="autocompleteField"
+              md-no-cache="productCtrl.noCache"
+              md-selected-item="productCtrl.selectedItem"
+              md-search-text="productCtrl.searchText"
+              md-items="item in productCtrl.querySearch(productCtrl.searchText)"
+              md-item-text="item.display"
+              md-require-match=""
+              md-floating-label="Category">
+            <md-item-template>
+              <span md-highlight-text="ctrl.searchText">{{item.display}}</span>
+            </md-item-template>
+          </md-autocomplete>
+          
         </md-sidenav>
 
         <md-content flex id="content">
@@ -50,7 +58,7 @@
           <md-list class="product-list">
             <md-list-item class="custom-md-list" ng-repeat="prod in productCtrl.products | filter:price | orderBy:'name'">
               <div class="item">
-                <h3>{{prod.name}}</h3>
+                <h3 class="md-title">{{prod.name}}</h3>
                 <img class="item-image" ng-src="{{prod.img}}">
                 <div class="item-info">
                   <p>Price: {{prod.price | currency}}</p>
@@ -76,6 +84,8 @@
     <script src="../node_modules/angular-animate/angular-animate.js"></script>
     <script src="../node_modules/angular-aria/angular-aria.js"></script>
     <script src="../node_modules/angular-resource/angular-resource.js"></script>
+    <script src="../node_modules/lodash/index.js"></script>
+    <script src="../node_modules/angular-lodash/angular-lodash.js"></script>
     <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
 
     <script src="./main.js"></script>
