@@ -13,7 +13,7 @@
    * @constructor
    */
   function productService($resource, $q, BASE_API_URI){
-    var service = $resource('http://www.mocky.io/v2/580f84c7120000c4159e2f64', {},
+    var service = $resource('http://www.mocky.io/v2/58115c3b3a0000a20d6098d4', {},
       {
 
         get: {

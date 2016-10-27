@@ -46,7 +46,7 @@
 
 (function(){
   'use strict';
-  ProductController.$inject = ['productService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log', '_'];
+  ProductController.$inject = ['productService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log', '_', '$scope'];
   angular
        .module('andresshop.products')
        .controller('ProductController', ProductController);
@@ -57,10 +57,11 @@
    * @param avatarsService
    * @constructor
    */
-  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _ ) {
+  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope ) {
     var self = this;
 
-    self.search       = {};
+    self.search;
+    self.orderBy      = null;
     self.selected     = null;
     self.products     = [];
     self.categories   = [];
@@ -94,8 +95,13 @@
         self.categoriesAC.push({display: self.categories[i], value: self.categories[i]});
       }
       console.log('listProducts', self.products);
+      self.Allproducts = _.clone(self.products);
       console.log('categoriesAC', self.categoriesAC);
     });
+
+    if (!!self.searchText) {
+      self.search.categories = [self.searchText.value];
+    }
 
     // *********************************
     // Internal methods
@@ -114,6 +120,7 @@
 
     function querySearchCategory (query) {
       var results = query ? self.categoriesAC.filter( createFilterFor(query) ) : self.categoriesAC;
+
       return results;
     }
 
@@ -128,6 +135,27 @@
       };
 
     }
+
+    $scope.$watch('productCtrl.search', function(value) {
+      if(!!value){
+        if (_.isObject(value)) {
+          self.search = value;
+        } else {
+         self.search = JSON.parse(value);
+        }
+      }
+    });
+
+    $scope.$watch('productCtrl.selectedItem', function(newV, old) {
+      if (!!newV) {
+        var temp = _.filter(self.products, _.matches({ 'categories': [newV.value] }));
+        self.products = _.clone(temp);
+      } else {
+        self.products = _.clone(self.Allproducts);
+      }
+      
+
+    });
 
   }
 
@@ -148,7 +176,7 @@
    * @constructor
    */
   function productService($resource, $q, BASE_API_URI){
-    var service = $resource('http://www.mocky.io/v2/580f84c7120000c4159e2f64', {},
+    var service = $resource('http://www.mocky.io/v2/58115c3b3a0000a20d6098d4', {},
       {
 
         get: {
