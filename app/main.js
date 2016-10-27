@@ -83,6 +83,8 @@
       self.categories = _.pluck(listProducts.categories, 'name');
 
       for (var i = 0; i < self.products.length; i++){
+        self.products[i].price = parseInt(self.products[i].price);
+
         for (var j= 0; j < self.products[i].categories.length; j++){
           self.products[i].categories[j] = _.result(_.find(listProducts.categories, function(chr) {
               return chr.categori_id == self.products[i].categories[j];
