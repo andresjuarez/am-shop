@@ -34,8 +34,8 @@
 
     <div flex layout="row">
 
-        <md-sidenav  ng-click="productCtrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
-          <div class="box-sidevar">
+        <md-sidenav layout-padding ng-click="productCtrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
+
             <h3 class="md-title">Filters</h3>
             <div class="categories-search">
               <md-autocomplete flex class="md-accent"
@@ -72,7 +72,7 @@
               <md-radio-button value="-price">Higher price</md-radio-button>
 
             </md-radio-group>
-          </div>
+
           
         </md-sidenav>
 
@@ -84,10 +84,15 @@
                 <h3 class="md-title">{{prod.name}}</h3>
                 <img class="item-image" ng-src="{{prod.img}}">
                 <div class="item-info">
-                  <p>Price: {{prod.price | currency}}</p>
+                  <div class="mini-header"> 
+                    <span>Price: {{prod.price | currency}}</span> 
+                    <span class="tag-prod soldout" ng-hide="prod.available">SOLD OUT</span>
+                    <span class="tag-prod available" ng-show="prod.available">Available</span>
+                    <span class="tag-prod bestseller" ng-show="prod.best_seller">Best Seller</span>
+                  </div>
                   <p> <span ng-show="prod.categories.length > 1">Categories</span><span ng-show="prod.categories.length == 1">Category</span>: <span ng-repeat="cat in prod.categories">{{cat}}<span ng-hide="$last">,</span> </span> </p>
                   <p>{{prod.description}}</p>
-                </div>
+                </div> 
               </div>
               
             </md-list-item>

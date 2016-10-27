@@ -157,6 +157,28 @@ span.name {
   float: left;
 }
 
+.mini-header{
+  display: inline-block;
+  width: 100%;
+}
+
+.tag-prod {
+  float: right;
+  color: white;
+  margin-right: 4px;
+  border-radius: 2px;
+}
+.soldout {
+  background-color: red;
+}
+
+.available {
+  background-color: green;
+}
+
+.bestseller {
+  background-color: orange;
+}
 /*sidevar*/
 .box-sidevar {
   margin: 10%;
