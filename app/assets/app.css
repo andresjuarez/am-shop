@@ -157,6 +157,10 @@ span.name {
   float: left;
 }
 
+/*sidevar*/
+.box-sidevar {
+  margin: 10%;
+}
 .categories-search{
   height: 94px;
 }

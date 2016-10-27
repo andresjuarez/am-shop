@@ -106,9 +106,11 @@
       } else {
         self.products = _.clone(self.Allproducts);
       }
-      
-
     });
+
+    $scope.onSwipeRight = function(ev) {
+      toggleList();
+    };
 
   }
 

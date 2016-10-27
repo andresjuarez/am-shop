@@ -35,48 +35,48 @@
     <div flex layout="row">
 
         <md-sidenav  ng-click="productCtrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
-          <h3 class="md-title">Filters</h3>
-          <div class="categories-search">
-            <md-autocomplete flex class="md-accent"
-                md-input-name="autocompleteField"
-                md-no-cache="productCtrl.noCache"
-                md-selected-item="productCtrl.selectedItem"
-                md-search-text="productCtrl.searchText"
-                md-items="item in productCtrl.querySearch(productCtrl.searchText)"
-                md-item-text="item.display"
-                md-floating-label="Category">
-              <md-item-template>
-                <span md-highlight-text="ctrl.searchText">{{item.display}}</span>
-              </md-item-template>
-            </md-autocomplete>
+          <div class="box-sidevar">
+            <h3 class="md-title">Filters</h3>
+            <div class="categories-search">
+              <md-autocomplete flex class="md-accent"
+                  md-input-name="autocompleteField"
+                  md-no-cache="productCtrl.noCache"
+                  md-selected-item="productCtrl.selectedItem"
+                  md-search-text="productCtrl.searchText"
+                  md-items="item in productCtrl.querySearch(productCtrl.searchText)"
+                  md-item-text="item.display"
+                  md-floating-label="Category">
+                <md-item-template>
+                  <span md-highlight-text="ctrl.searchText">{{item.display}}</span>
+                </md-item-template>
+              </md-autocomplete>
+            </div>
+            
+
+            <h4>Filter by tags</h4>
+            <md-radio-group ng-model="productCtrl.search">
+
+              <md-radio-button value='' > none</md-radio-button>
+              <md-radio-button value='{"available": true}' > Available</md-radio-button>
+              <md-radio-button value='{"available": false}' > Sold out </md-radio-button>
+              <md-radio-button value='{"best_seller": true}' > Best Seller</md-radio-button>
+
+            </md-radio-group>
+
+            <h4>Order by</h4>
+            <md-radio-group ng-model="productCtrl.orderBy">
+              <md-radio-button value="" > none</md-radio-button>
+              <md-radio-button value="name" > Name: A - Z </md-radio-button>
+              <md-radio-button value="-name" >Name: Z - A</md-radio-button>
+              <md-radio-button value="price"> Lower price </md-radio-button>
+              <md-radio-button value="-price">Higher price</md-radio-button>
+
+            </md-radio-group>
           </div>
-          
-
-          <h4>Filter by tags</h4>
-          <md-radio-group ng-model="productCtrl.search">
-
-            <md-radio-button value='' > none</md-radio-button>
-            <md-radio-button value='{"available": true}' > Available</md-radio-button>
-            <md-radio-button value='{"available": false}' > Sold out </md-radio-button>
-            <md-radio-button value='{"best_seller": true}' > Best Seller</md-radio-button>
-
-          </md-radio-group>
-
-          <h4>Order by</h4>
-          <md-radio-group ng-model="productCtrl.orderBy">
-            <md-radio-button value="" > none</md-radio-button>
-            <md-radio-button value="name" > Name: A - Z </md-radio-button>
-            <md-radio-button value="-name" >Name: Z - A</md-radio-button>
-            <md-radio-button value="price"> Lower price </md-radio-button>
-            <md-radio-button value="-price">Higher price</md-radio-button>
-
-          </md-radio-group>
-
-          {{productCtrl.selectedItem}}
           
         </md-sidenav>
 
-        <md-content flex id="content">
+        <md-content flex id="content" md-swipe-right="onSwipeRight()">
 
           <md-list class="product-list">
             <md-list-item class="custom-md-list" ng-repeat="prod in productCtrl.products | filter: productCtrl.search | orderBy: productCtrl.orderBy">
