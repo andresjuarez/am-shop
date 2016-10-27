@@ -5,6 +5,9 @@
 
         $mdIconProvider
             .defaultIconSet("./assets/svg/avatars.svg", 128)
+            .icon("star", "./assets/svg/star.svg", 24)
+            .icon("error", "./assets/svg/error.svg", 24)
+            .icon("check", "./assets/svg/check.svg", 24)
             .icon("menu"       , "./assets/svg/menu.svg"        , 24)
             .icon("share"      , "./assets/svg/share.svg"       , 24)
             .icon("google_plus", "./assets/svg/google_plus.svg" , 512)

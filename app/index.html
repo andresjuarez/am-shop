@@ -84,11 +84,11 @@
                 <h3 class="md-title">{{prod.name}}</h3>
                 <img class="item-image" ng-src="{{prod.img}}">
                 <div class="item-info">
-                  <div class="mini-header"> 
-                    <span>Price: {{prod.price | currency}}</span> 
-                    <span class="tag-prod soldout" ng-hide="prod.available">SOLD OUT</span>
-                    <span class="tag-prod available" ng-show="prod.available">Available</span>
-                    <span class="tag-prod bestseller" ng-show="prod.best_seller">Best Seller</span>
+                  <div flex class="mini-header"> 
+                    <span flex="30" >Price: {{prod.price | currency}}</span> 
+                    <span flex="60" class="tag-prod soldout" ng-hide="prod.available"><md-icon md-svg-icon="error"></md-icon>SOLD OUT</span>
+                    <span flex="60" class="tag-prod available" ng-show="prod.available"><md-icon md-svg-icon="check"></md-icon>Available</span>
+                    <span flex="60" class="tag-prod bestseller" ng-show="prod.best_seller"><md-icon md-svg-icon="star"></md-icon>Best Seller</span>
                   </div>
                   <p> <span ng-show="prod.categories.length > 1">Categories</span><span ng-show="prod.categories.length == 1">Category</span>: <span ng-repeat="cat in prod.categories">{{cat}}<span ng-hide="$last">,</span> </span> </p>
                   <p>{{prod.description}}</p>

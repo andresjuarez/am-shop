@@ -163,10 +163,12 @@ span.name {
 }
 
 .tag-prod {
-  float: right;
   color: white;
   margin-right: 4px;
   border-radius: 2px;
+  height: 25px;
+  padding: 2px;  
+
 }
 .soldout {
   background-color: red;
