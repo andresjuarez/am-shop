@@ -1,13 +1,28 @@
 (function(){
+    'use strict';
     angular
-    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products'])
-    .config(['$mdThemingProvider', '$mdIconProvider', function($mdThemingProvider, $mdIconProvider){
+    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute'])
+    .config(['$mdThemingProvider', '$mdIconProvider', '$routeProvider', '$locationProvider', function($mdThemingProvider, $mdIconProvider, $routeProvider, $locationProvider){
+
+        // $locationProvider.html5Mode(true);
+        $routeProvider
+            .when("/", {
+                templateUrl : "main.html"
+            })
+            .when("/cart", {
+                templateUrl : "cart.html"
+            });
 
         $mdIconProvider
             .defaultIconSet("./assets/svg/avatars.svg", 128)
             .icon("star", "./assets/svg/star.svg", 24)
             .icon("error", "./assets/svg/error.svg", 24)
             .icon("check", "./assets/svg/check.svg", 24)
+            .icon("filter", "./assets/svg/filter.svg", 24)
+            .icon("search", "./assets/svg/search.svg", 24)
+            .icon("cart", "./assets/svg/cart.svg", 24)
+            .icon("remove_cart", "./assets/svg/remove_cart.svg", 24)
+            .icon("add_cart", "./assets/svg/add_cart.svg", 24)
             .icon("menu"       , "./assets/svg/menu.svg"        , 24)
             .icon("share"      , "./assets/svg/share.svg"       , 24)
             .icon("google_plus", "./assets/svg/google_plus.svg" , 512)
@@ -34,7 +49,15 @@
   'use strict';
 
   // Prepare the 'products' module for subsequent registration of controllers and delegates
-  angular.module('andresshop.products', [ 'ngMaterial']);
+  angular.module('andresshop.cart', [ 'ngMaterial']);
+
+
+})();
+(function(){
+  'use strict';
+
+  // Prepare the 'products' module for subsequent registration of controllers and delegates
+  angular.module('andresshop.products', [ 'ngMaterial', 'andresshop.cart']);
 
 
 })();
@@ -47,9 +70,53 @@
 
 })();
 
+(function iife() {
+  'use strict';
+
+  CartFactory.$inject = ['_'];
+  angular
+    .module('andresshop.cart')
+    .factory('CartFactory', CartFactory);
+
+  /* @ngInject */
+  function CartFactory(_) {
+
+    var cartArray = [];
+    
+    var service = {
+      confirm: confirm,
+      addToCart: addToCart,
+      cartArray: cartArray
+    };
+    return service;
+
+    ////////////////
+
+    function addToCart(product) {
+      console.log('HERE!'); 
+      var isIn = _.find(cartArray, _.identity(product));
+
+      if (isIn == undefined) {
+        product.cant = 1;
+        cartArray.push(product);
+      } else {
+        isIn.cant += 1;
+      }
+      console.log('IN', isIn);
+      
+      
+    }
+
+    function removeFromCart(product) {
+      _.reject(cartArray, product);
+    }
+
+  }
+})();
+
 (function(){
   'use strict';
-  ProductController.$inject = ['productService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log', '_', '$scope'];
+  ProductController.$inject = ['productService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log', '_', '$scope', 'CartFactory', '$mdToast'];
   angular
        .module('andresshop.products')
        .controller('ProductController', ProductController);
@@ -60,7 +127,7 @@
    * @param avatarsService
    * @constructor
    */
-  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope ) {
+  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope, CartFactory, $mdToast) {
     var self = this;
 
     self.search;
@@ -74,7 +141,31 @@
     self.searchText   = null;
     self.selectedItem = null;
     self.categoriesAC = [];
-    self.querySearch   = querySearchCategory;
+    self.querySearch  = querySearchCategory;
+
+    /*Search Product */
+    self.searchProd      = undefined;
+    var originatorEv;
+    self.addToCart = addToCart;
+
+    self.cartItems = CartFactory.cartArray;
+
+    function addToCart(product) {
+      CartFactory.addToCart(product);
+      self.showSimpleToast('Added to cart');
+      
+    }
+
+    self.showSimpleToast = function(message) {
+
+
+    $mdToast.show(
+      $mdToast.simple()
+        .textContent(message)
+        .position('top right')
+        .hideDelay(500)
+    );
+  };
 
 
 
@@ -85,10 +176,9 @@
       self.products = listProducts.products;
       self.categories = _.pluck(listProducts.categories, 'name');
 
-      for (var i = 0; i < self.products.length; i++){
+      for (var i = 0; i < self.products.length; i++) {
         self.products[i].price = parseInt(self.products[i].price);
-
-        for (var j= 0; j < self.products[i].categories.length; j++){
+        for (var j= 0; j < self.products[i].categories.length; j++) {
           self.products[i].categories[j] = _.result(_.find(listProducts.categories, function(chr) {
               return chr.categori_id == self.products[i].categories[j];
             }), 'name');
@@ -108,6 +198,13 @@
       self.search.categories = [self.searchText.value];
     }
 
+
+
+   self.openMenu = function($mdOpenMenu, ev) {
+    originatorEv = ev;
+    $mdOpenMenu(ev);
+  };
+
     // *********************************
     // Internal methods
     // *********************************
@@ -116,7 +213,9 @@
      * Hide or Show the 'left' sideNav area
      */
     function toggleList() {
+
       $mdSidenav('left').toggle();
+      console.log('lok',$mdSidenav('left').isLockedOpen());
     }
 
     /*

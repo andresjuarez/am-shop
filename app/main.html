@@ -1,0 +1,38 @@
+
+          <md-input-container class="md-icon-float md-block">
+            <!-- Use floating label instead of placeholder -->
+            <label>Search products by name</label>
+            <md-icon md-svg-icon="search" class="name"></md-icon>
+            <input ng-model="productCtrl.searchProd" type="text">
+          </md-input-container>
+          {{$mdMedia('gt-md')}}
+          <md-list class="product-list">
+            <md-list-item class="custom-md-list" ng-repeat="prod in productCtrl.products | filter: productCtrl.search | filter: {name: productCtrl.searchProd} | orderBy: productCtrl.orderBy">
+              <div class="item">
+                <h3 class="md-title">{{prod.name}}</h3>
+                <img class="item-image" ng-src="{{prod.img}}">
+                <div class="item-info">
+                  <div flex class="mini-header"> 
+                    <span flex="30" >Price: {{prod.price | currency}}</span> 
+                    <span flex="60" class="tag-prod soldout" ng-hide="prod.available"><md-icon md-svg-icon="error"></md-icon>SOLD OUT</span>
+                    <span flex="60" class="tag-prod available" ng-show="prod.available"><md-icon md-svg-icon="check"></md-icon>Available</span>
+                    <span flex="60" class="tag-prod bestseller" ng-show="prod.best_seller"><md-icon md-svg-icon="star"></md-icon>Best Seller</span>
+                  </div>
+                  <p> ID {{prod.id}}</p>
+                  <p> <span ng-show="prod.categories.length > 1">Categories</span><span ng-show="prod.categories.length == 1">Category</span>: <span ng-repeat="cat in prod.categories">{{cat}}<span ng-hide="$last">,</span> </span> </p>
+                  <p>{{prod.description}}</p>
+                  <md-button aria-label="{{prod.id}}" class="md-raised md-accent" ng-click="productCtrl.addToCart(prod)">
+                    <md-icon md-svg-icon="add_cart" ></md-icon>
+                  </md-button>
+                </div> 
+              </div>
+              
+            </md-list-item>
+          </md-list>
+           <!--<md-icon md-svg-icon="{{productCtrl.selected.avatar}}" class="avatar"></md-icon>
+          <h2>{{productCtrl.selected.name}}</h2>
+          <p>{{productCtrl.selected.content}}</p>
+
+          <md-button class="share" md-no-ink ng-click="productCtrl.makeContact(productCtrl.selected)" aria-label="Share with {{ productCtrl.selected.name }}">
+            <md-icon md-svg-icon="share"></md-icon>
+          </md-button> -->

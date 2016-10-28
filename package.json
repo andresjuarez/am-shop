@@ -24,6 +24,7 @@
     "angular-material": "^1.1.0",
     "angular-messages": "^1.5.5",
     "angular-resource": "^1.5.8",
+    "angular-route": "^1.5.8",
     "lodash": "^3.10.1"
   },
   "devDependencies": {

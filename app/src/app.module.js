@@ -1,13 +1,28 @@
 (function(){
+    'use strict';
     angular
-    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products'])
-    .config(function($mdThemingProvider, $mdIconProvider){
+    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute'])
+    .config(function($mdThemingProvider, $mdIconProvider, $routeProvider, $locationProvider){
+
+        // $locationProvider.html5Mode(true);
+        $routeProvider
+            .when("/", {
+                templateUrl : "main.html"
+            })
+            .when("/cart", {
+                templateUrl : "cart.html"
+            });
 
         $mdIconProvider
             .defaultIconSet("./assets/svg/avatars.svg", 128)
             .icon("star", "./assets/svg/star.svg", 24)
             .icon("error", "./assets/svg/error.svg", 24)
             .icon("check", "./assets/svg/check.svg", 24)
+            .icon("filter", "./assets/svg/filter.svg", 24)
+            .icon("search", "./assets/svg/search.svg", 24)
+            .icon("cart", "./assets/svg/cart.svg", 24)
+            .icon("remove_cart", "./assets/svg/remove_cart.svg", 24)
+            .icon("add_cart", "./assets/svg/add_cart.svg", 24)
             .icon("menu"       , "./assets/svg/menu.svg"        , 24)
             .icon("share"      , "./assets/svg/share.svg"       , 24)
             .icon("google_plus", "./assets/svg/google_plus.svg" , 512)

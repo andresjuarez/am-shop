@@ -7,10 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <base href="/">
 
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
     <link rel="stylesheet" href="../node_modules/angular-material/angular-material.css"/>
     <link rel="stylesheet" href="assets/app.css"/>
+
 
     <style type="text/css">
         /**
@@ -25,20 +27,49 @@
 
   <body ng-app="andresshop" layout="column" ng-controller="ProductController as productCtrl" ng-cloak>
 
-    <md-toolbar layout="row"> 
-      <md-button class="menu" hide-gt-sm ng-click="productCtrl.toggleList()" aria-label="Show User List">
-        <md-icon md-svg-icon="menu" ></md-icon>
-      </md-button>
-      <h1>Andres Shop</h1>
+    <md-toolbar class="md-hue-2">
+      <div class="md-toolbar-tools">
+        <md-button class="menu" hide-gt-sm ng-click="productCtrl.toggleList()" aria-label="Show User List">
+          <md-icon md-svg-icon="filter" ></md-icon>
+        </md-button>
+        <h2>
+          <span>Andres Shop</span>
+        </h2>
+        <span flex></span>
+        <md-menu md-position-mode="target-right target">
+             <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="productCtrl.openMenu($mdOpenMenu, $event)">
+               <md-icon md-menu-origin md-svg-icon="cart"></md-icon>
+             </md-button>
+             <md-menu-content width="4">
+                <md-list-item class="md-3-line" ng-repeat="item in productCtrl.cartItems track by $index ">
+                 <img ng-src="{{item.img}}" class="md-avatar" alt="{{item.name}}" />
+                 <div class="md-list-item-text" layout="column">
+                   <h4>{{item.name}} - cant: {{item.cant}}</h4>
+
+                 </div>
+               </md-list-item>
+
+               <md-menu-divider></md-menu-divider>
+               <md-menu-item>
+                 <a href="#/cart">
+                   <md-button >
+                    <md-icon md-svg-icon="cart"></md-icon>
+                    View Cart
+                  </md-button>
+                 </a>
+               </md-menu-item>
+             </md-menu-content>
+           </md-menu>
+      </div>
     </md-toolbar>
 
     <div flex layout="row">
 
-        <md-sidenav layout-padding ng-click="productCtrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
+        <md-sidenav layout-padding ng-click="$mdMedia('gt-md') && productCtrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
 
             <h3 class="md-title">Filters</h3>
             <div class="categories-search">
-              <md-autocomplete flex class="md-accent"
+              <md-autocomplete flex md-sidenav-focus class="accent"
                   md-input-name="autocompleteField"
                   md-no-cache="productCtrl.noCache"
                   md-selected-item="productCtrl.selectedItem"
@@ -76,34 +107,9 @@
           
         </md-sidenav>
 
-        <md-content flex id="content" md-swipe-right="onSwipeRight()">
+        <md-content flex id="content" md-swipe-right="onSwipeRight()" ng-view>
 
-          <md-list class="product-list">
-            <md-list-item class="custom-md-list" ng-repeat="prod in productCtrl.products | filter: productCtrl.search | orderBy: productCtrl.orderBy">
-              <div class="item">
-                <h3 class="md-title">{{prod.name}}</h3>
-                <img class="item-image" ng-src="{{prod.img}}">
-                <div class="item-info">
-                  <div flex class="mini-header"> 
-                    <span flex="30" >Price: {{prod.price | currency}}</span> 
-                    <span flex="60" class="tag-prod soldout" ng-hide="prod.available"><md-icon md-svg-icon="error"></md-icon>SOLD OUT</span>
-                    <span flex="60" class="tag-prod available" ng-show="prod.available"><md-icon md-svg-icon="check"></md-icon>Available</span>
-                    <span flex="60" class="tag-prod bestseller" ng-show="prod.best_seller"><md-icon md-svg-icon="star"></md-icon>Best Seller</span>
-                  </div>
-                  <p> <span ng-show="prod.categories.length > 1">Categories</span><span ng-show="prod.categories.length == 1">Category</span>: <span ng-repeat="cat in prod.categories">{{cat}}<span ng-hide="$last">,</span> </span> </p>
-                  <p>{{prod.description}}</p>
-                </div> 
-              </div>
-              
-            </md-list-item>
-          </md-list>
-           <!--<md-icon md-svg-icon="{{productCtrl.selected.avatar}}" class="avatar"></md-icon>
-          <h2>{{productCtrl.selected.name}}</h2>
-          <p>{{productCtrl.selected.content}}</p>
 
-          <md-button class="share" md-no-ink ng-click="productCtrl.makeContact(productCtrl.selected)" aria-label="Share with {{ productCtrl.selected.name }}">
-            <md-icon md-svg-icon="share"></md-icon>
-          </md-button> -->
         </md-content>
 
     </div>
@@ -111,6 +117,7 @@
     <script src="../node_modules/angular/angular.js"></script>
     <script src="../node_modules/angular-animate/angular-animate.js"></script>
     <script src="../node_modules/angular-aria/angular-aria.js"></script>
+    <script src="../node_modules/angular-route/angular-route.js"></script>
     <script src="../node_modules/angular-resource/angular-resource.js"></script>
     <script src="../node_modules/lodash/index.js"></script>
     <script src="../node_modules/angular-lodash/angular-lodash.js"></script>

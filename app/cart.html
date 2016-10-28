@@ -1,0 +1,17 @@
+      
+
+<div layout="row" layout-align="start center" layout-wrap>
+  <md-card ng-repeat="item in productCtrl.cartItems track by $index ">
+    <img ng-src="{{item.img}}" class="md-card-image">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">{{item.name}}</span>
+      </md-card-title-text>
+    </md-card-title>
+    
+    <md-card-actions layout="row" layout-align="end center">
+      <md-button>Action 1</md-button>
+      <md-button>Action 2</md-button>
+    </md-card-actions>
+  </md-card>
+</div>

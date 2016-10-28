@@ -10,7 +10,7 @@
    * @param avatarsService
    * @constructor
    */
-  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope ) {
+  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope, CartFactory, $mdToast) {
     var self = this;
 
     self.search;
@@ -24,7 +24,31 @@
     self.searchText   = null;
     self.selectedItem = null;
     self.categoriesAC = [];
-    self.querySearch   = querySearchCategory;
+    self.querySearch  = querySearchCategory;
+
+    /*Search Product */
+    self.searchProd      = undefined;
+    var originatorEv;
+    self.addToCart = addToCart;
+
+    self.cartItems = CartFactory.cartArray;
+
+    function addToCart(product) {
+      CartFactory.addToCart(product);
+      self.showSimpleToast('Added to cart');
+      
+    }
+
+    self.showSimpleToast = function(message) {
+
+
+    $mdToast.show(
+      $mdToast.simple()
+        .textContent(message)
+        .position('top right')
+        .hideDelay(500)
+    );
+  };
 
 
 
@@ -35,10 +59,9 @@
       self.products = listProducts.products;
       self.categories = _.pluck(listProducts.categories, 'name');
 
-      for (var i = 0; i < self.products.length; i++){
+      for (var i = 0; i < self.products.length; i++) {
         self.products[i].price = parseInt(self.products[i].price);
-
-        for (var j= 0; j < self.products[i].categories.length; j++){
+        for (var j= 0; j < self.products[i].categories.length; j++) {
           self.products[i].categories[j] = _.result(_.find(listProducts.categories, function(chr) {
               return chr.categori_id == self.products[i].categories[j];
             }), 'name');
@@ -58,6 +81,13 @@
       self.search.categories = [self.searchText.value];
     }
 
+
+
+   self.openMenu = function($mdOpenMenu, ev) {
+    originatorEv = ev;
+    $mdOpenMenu(ev);
+  };
+
     // *********************************
     // Internal methods
     // *********************************
@@ -66,7 +96,9 @@
      * Hide or Show the 'left' sideNav area
      */
     function toggleList() {
+
       $mdSidenav('left').toggle();
+      console.log('lok',$mdSidenav('left').isLockedOpen());
     }
 
     /*
