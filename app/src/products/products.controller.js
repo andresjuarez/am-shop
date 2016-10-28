@@ -10,7 +10,9 @@
    * @param avatarsService
    * @constructor
    */
-  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope, CartFactory, $mdToast) {
+
+   /* @ngInject */
+  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope, CartFactory, $mdToast, $mdDialog) {
     var self = this;
 
     self.search;
@@ -20,6 +22,7 @@
     self.products     = [];
     self.categories   = [];
     self.toggleList   = toggleList;
+    self.apiUrl       = productService.apiUrl;
     
     /*filter categories */
     self.searchText   = null;
@@ -33,12 +36,62 @@
     self.addToCart = addToCart;
 
     self.cartItems = CartFactory.cartArray;
+    self.totalItem = totalItem;
 
     function addToCart(product) {
       CartFactory.addToCart(product);
       self.showSimpleToast('Added to cart');
       
     }
+
+    function totalItem() {
+      return _.sum(self.cartItems, function(item){
+        return item.cant*item.price;
+      });
+    }
+
+    self.getNewProductsFromHttpServer = function(ev){
+
+      var confirm = $mdDialog.confirm()
+                .title('Reset Cart')
+                .textContent('This will reset the carts contents and fetch new data')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .ok('Ok ')
+                .cancel('Cancel');
+
+          $mdDialog.show(confirm).then(function() {
+              CartFactory.cartArray.length = 0;
+              self.cleanProductVariables();
+              self.getProducts();
+          }, function() {
+            
+          });
+
+      
+    };
+
+
+    self.changeAPI = function(ev) {
+    // Appending dialog to document.body to cover sidenav in docs app
+    var confirm = $mdDialog.prompt()
+      .title('Place the Url of the API')
+      .placeholder('API Url')
+      .ariaLabel('API Url')
+      .initialValue('')
+      .targetEvent(ev)
+      .ok('Go')
+      .cancel('Cancel');
+
+    $mdDialog.show(confirm).then(function(result) {
+      self.apiUrl = result;
+      self.getNewProductsFromHttpServer();
+    }, function() {
+
+    });
+  };
+
+
 
     self.showSimpleToast = function(message) {
 
@@ -50,33 +103,47 @@
         .hideDelay(500)
     );
   };
+    self.deleteRowCallback = function(rows){
+      console.log("rows", rows);
+      _.remove(self.cartItems, function(item){
+        return _.contains(rows, item.id);
+      });
+      console.log('items', self.cartItems);
+    }
 
 
-
+    self.cleanProductVariables = function(){
+      self.products = [];
+      self.categories = [];
+      self.categoriesAC = [];
+    };
     // Load all products registered 
 
-    productService.get({}).$promise
-    .then(function (listProducts) {
-      self.products = listProducts.products;
-      self.categories = _.pluck(listProducts.categories, 'name');
+    self.getProducts = function(){
+      productService.getProducts(self.apiUrl).get({}).$promise
+      .then(function (listProducts) {
+        self.products = listProducts.products;
+        self.categories = _.pluck(listProducts.categories, 'name');
 
-      for (var i = 0; i < self.products.length; i++) {
-        self.products[i].price = parseInt(self.products[i].price);
-        for (var j= 0; j < self.products[i].categories.length; j++) {
-          self.products[i].categories[j] = _.result(_.find(listProducts.categories, function(chr) {
-              return chr.categori_id == self.products[i].categories[j];
-            }), 'name');
+        for (var i = 0; i < self.products.length; i++) {
+          self.products[i].price = parseInt(self.products[i].price);
+          for (var j= 0; j < self.products[i].categories.length; j++) {
+            self.products[i].categories[j] = _.result(_.find(listProducts.categories, function(chr) {
+                return chr.categori_id == self.products[i].categories[j];
+              }), 'name');
+          }
+          
         }
-        
-      }
 
-      for (var i = 0; i < self.categories.length; i++) {
-        self.categoriesAC.push({display: self.categories[i], value: self.categories[i]});
-      }
-      console.log('listProducts', self.products);
-      self.Allproducts = _.clone(self.products);
-      console.log('categoriesAC', self.categoriesAC);
-    });
+        for (var i = 0; i < self.categories.length; i++) {
+          self.categoriesAC.push({display: self.categories[i], value: self.categories[i]});
+        }
+        console.log('listProducts', self.products);
+        self.Allproducts = _.clone(self.products);
+        console.log('categoriesAC', self.categoriesAC);
+      });
+    };
+    self.getProducts();
 
     if (!!self.searchText) {
       self.search.categories = [self.searchText.value];
@@ -153,7 +220,22 @@
     $scope.onSwipeRight = function(ev) {
       toggleList();
     };
+    
+    self.tableData = {
+                      data: self.nutritionList,
+                      'column-keys': [
+                          'name',
+                          'calories',
+                          'fat',
+                          'carbs',
+                          'protein',
+                          'sodium',
+                          'calcium',
+                          'iron'
+                      ]
+                      };
 
+    
   }
 
 })();

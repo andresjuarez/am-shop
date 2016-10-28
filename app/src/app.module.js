@@ -1,7 +1,7 @@
 (function(){
     'use strict';
     angular
-    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute'])
+    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute', 'mdDataTable'])
     .config(function($mdThemingProvider, $mdIconProvider, $routeProvider, $locationProvider){
 
         // $locationProvider.html5Mode(true);

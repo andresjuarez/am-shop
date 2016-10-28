@@ -12,15 +12,35 @@
    * @returns {{loadAll: Function}}
    * @constructor
    */
-  function productService($resource, $q, BASE_API_URI){
-    var service = $resource('http://www.mocky.io/v2/58115c3b3a0000a20d6098d4', {},
-      {
 
-        get: {
-          method: 'GET',
-          isArray: false
-        }
-      });
+   /* @ngInject */
+  function productService($resource, $q, BASE_API_URI){
+
+    var apiUrl = 'http://www.mocky.io/v2/58115c3b3a0000a20d6098d4';
+
+    var getProducts = function(httpServerUrl){
+      return $resource(httpServerUrl, {},
+            {
+
+              get: {
+                method: 'GET',
+                isArray: false
+              }
+            });
+    };
+
+    var changeHttpServer = function(newUrl){
+
+      apiUrl = newUrl;
+
+    };
+
+    var service = {
+      getProducts: getProducts,
+      changeHttpServer: changeHttpServer,
+      apiUrl: apiUrl
+    };
+
     return service;
   }
 

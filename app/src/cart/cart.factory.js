@@ -13,7 +13,8 @@
     var service = {
       confirm: confirm,
       addToCart: addToCart,
-      cartArray: cartArray
+      cartArray: cartArray,
+      cleanCart: cleanCart
     };
     return service;
 
@@ -25,11 +26,17 @@
 
       if (isIn == undefined) {
         product.cant = 1;
+        product.subTotal = product.price;
         cartArray.push(product);
       } else {
         isIn.cant += 1;
+        isIn.subTotal = isIn.cant * isIn.price; 
       }      
       
+    }
+
+    function cleanCart(){
+      cartArray = [];
     }
 
     function removeFromCart(product) {
