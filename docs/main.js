@@ -113,7 +113,7 @@
 
 (function(){
   'use strict';
-  ProductController.$inject = ['productService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log', '_', '$scope', 'CartFactory', '$mdToast', '$mdDialog'];
+  ProductController.$inject = ['productService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log', '_', '$scope', 'CartFactory', '$mdToast', '$mdDialog', '$rootScope'];
   angular
        .module('andresshop.products')
        .controller('ProductController', ProductController);
@@ -126,7 +126,7 @@
    */
 
    /* @ngInject */
-  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope, CartFactory, $mdToast, $mdDialog) {
+  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope, CartFactory, $mdToast, $mdDialog, $rootScope) {
     var self = this;
 
     self.search;
@@ -151,6 +151,16 @@
 
     self.cartItems = CartFactory.cartArray;
     self.totalItem = totalItem;
+
+    self.isCart = false;
+
+    $scope.$on('$routeChangeSuccess', function(scope, next, current){
+      if(next.$$route.originalPath == '/cart') {
+        self.isCart = true;
+      } else {
+        self.isCart = false;
+      }
+    });
 
     function addToCart(product) {
       CartFactory.addToCart(product);

@@ -69,7 +69,7 @@
 
     <div flex layout="row">
 
-        <md-sidenav layout-padding ng-click="$mdMedia('gt-md') && productCtrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
+        <md-sidenav layout-padding ng-click="$mdMedia('gt-md') && productCtrl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" ng-hide="productCtrl.isCart" >
 
             <h3 class="md-title">Filters</h3>
             <div class="categories-search">
