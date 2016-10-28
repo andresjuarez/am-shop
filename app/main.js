@@ -93,7 +93,7 @@
     ////////////////
 
     function addToCart(product) {
-      console.log('HERE!'); 
+
       var isIn = _.find(cartArray, _.identity(product));
 
       if (isIn == undefined) {
@@ -101,9 +101,7 @@
         cartArray.push(product);
       } else {
         isIn.cant += 1;
-      }
-      console.log('IN', isIn);
-      
+      }      
       
     }
 
@@ -131,6 +129,7 @@
     var self = this;
 
     self.search;
+    self.searchR;
     self.orderBy      = null;
     self.selected     = null;
     self.products     = [];
@@ -240,13 +239,20 @@
 
     }
 
-    $scope.$watch('productCtrl.search', function(value) {
-      if(!!value){
-        if (_.isObject(value)) {
-          self.search = value;
-        } else {
-         self.search = JSON.parse(value);
-        }
+    $scope.$watch('productCtrl.searchR', function(value) {
+      switch(value){
+        case '1': 
+          self.search = {available: true};
+          break;
+        case '2':
+          self.search = {available: false};
+          break;
+        case '3':
+          self.search = {best_seller: true};
+          break;
+        default:
+          self.search = undefined;
+          break;
       }
     });
 

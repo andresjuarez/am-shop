@@ -85,12 +85,12 @@
             
 
             <h4>Filter by tags</h4>
-            <md-radio-group ng-model="productCtrl.search">
+            <md-radio-group ng-model="productCtrl.searchR">
 
-              <md-radio-button value='' > none</md-radio-button>
-              <md-radio-button value='{"available": true}' > Available</md-radio-button>
-              <md-radio-button value='{"available": false}' > Sold out </md-radio-button>
-              <md-radio-button value='{"best_seller": true}' > Best Seller</md-radio-button>
+              <md-radio-button value='0' > none</md-radio-button>
+              <md-radio-button value='1' > Available</md-radio-button>
+              <md-radio-button value='2' > Sold out </md-radio-button>
+              <md-radio-button value='3' > Best Seller</md-radio-button>
 
             </md-radio-group>
 

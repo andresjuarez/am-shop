@@ -20,7 +20,7 @@
     ////////////////
 
     function addToCart(product) {
-      console.log('HERE!'); 
+
       var isIn = _.find(cartArray, _.identity(product));
 
       if (isIn == undefined) {
@@ -28,9 +28,7 @@
         cartArray.push(product);
       } else {
         isIn.cant += 1;
-      }
-      console.log('IN', isIn);
-      
+      }      
       
     }
 
