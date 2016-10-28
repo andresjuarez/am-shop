@@ -55,7 +55,7 @@ function handleError(result){
 
 // Watch Files For Changes
 gulp.task('watch', ['scripts', 'server'],  function() {
-    gulp.watch(['./app/src/**/*.js', './app/src/**/*.html', './app/index.html'], ['scripts']);
+    gulp.watch(['./app/src/**/*.js', './app/src/**/*.html', './app/*.html'], ['scripts']);
 
 });
 

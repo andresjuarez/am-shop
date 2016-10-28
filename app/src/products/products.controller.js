@@ -50,6 +50,18 @@
       });
     }
 
+    self.showMessage = function methodName(ev) {
+      $mdDialog.show(
+            $mdDialog.alert()
+              .clickOutsideToClose(true)
+              .title('This is a Demo')
+              .textContent('You can not pay at this moment')
+              .ariaLabel('Dialog')
+              .ok('Got it!')
+              .targetEvent(ev)
+          );
+    };
+
     self.getNewProductsFromHttpServer = function(ev){
 
       var confirm = $mdDialog.confirm()
@@ -192,6 +204,7 @@
     }
 
     $scope.$watch('productCtrl.searchR', function(value) {
+      self.products = _.clone(self.Allproducts);
       switch(value){
         case '1': 
           self.search = {available: true};
@@ -201,6 +214,18 @@
           break;
         case '3':
           self.search = {best_seller: true};
+          break;
+        case '4':
+          _.remove(self.products, function (item) {
+            console.log('item', item.price);
+            return item.price < 30000;
+          });
+          break;
+        case '5':
+          _.remove(self.products, function (item) {
+            console.log('item', item.price);
+            return item.price  > 10000;
+          });
           break;
         default:
           self.search = undefined;
@@ -216,6 +241,8 @@
         self.products = _.clone(self.Allproducts);
       }
     });
+
+
 
     $scope.onSwipeRight = function(ev) {
       toggleList();

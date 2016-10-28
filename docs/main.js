@@ -1,1 +1,431 @@
-!function(){"use strict";angular.module("andresshop",["ngMaterial","ngResource","angular-lodash","andresshop.products","ngRoute","mdDataTable"]).config(["$mdThemingProvider","$mdIconProvider","$routeProvider","$locationProvider",function(e,t,r,a){r.when("/",{templateUrl:"main.html"}).when("/cart",{templateUrl:"cart.html"}),t.defaultIconSet("./assets/svg/avatars.svg",128).icon("star","./assets/svg/star.svg",24).icon("error","./assets/svg/error.svg",24).icon("check","./assets/svg/check.svg",24).icon("filter","./assets/svg/filter.svg",24).icon("search","./assets/svg/search.svg",24).icon("cart","./assets/svg/cart.svg",24).icon("remove_cart","./assets/svg/remove_cart.svg",24).icon("add_cart","./assets/svg/add_cart.svg",24).icon("menu","./assets/svg/menu.svg",24).icon("share","./assets/svg/share.svg",24).icon("google_plus","./assets/svg/google_plus.svg",512).icon("hangouts","./assets/svg/hangouts.svg",512).icon("twitter","./assets/svg/twitter.svg",512).icon("phone","./assets/svg/phone.svg",512),e.theme("default").primaryPalette("deep-orange").accentPalette("blue").warnPalette("red"),e.enableBrowserColor({theme:"default",palette:"deep-orange",hue:"800"})}]).constant("_",window._)}(),function(){"use strict";angular.module("andresshop.cart",["ngMaterial"])}(),function(){"use strict";angular.module("andresshop.products",["ngMaterial","andresshop.cart"])}(),function(){"use strict";function e(e){function t(t){var r=e.find(a,e.identity(t));void 0==r?(t.cant=1,t.subTotal=t.price,a.push(t)):(r.cant+=1,r.subTotal=r.cant*r.price)}function r(){a=[]}var a=[],o={confirm:confirm,addToCart:t,cartArray:a,cleanCart:r};return o}e.$inject=["_"],angular.module("andresshop.cart").factory("CartFactory",e)}(),function(){"use strict";function e(e,t,r,a,o,s,c,n,i,l){function u(e){n.addToCart(e),v.showSimpleToast("Added to cart")}function d(){return s.sum(v.cartItems,function(e){return e.cant*e.price})}function g(){t("left").toggle(),console.log("lok",t("left").isLockedOpen())}function p(e){var t=e?v.categoriesAC.filter(h(e)):v.categoriesAC;return t}function h(e){var t=angular.lowercase(e);return function(e){return 0===e.value.indexOf(t)}}var v=this;v.search,v.searchR,v.orderBy=null,v.selected=null,v.products=[],v.categories=[],v.toggleList=g,v.apiUrl=e.apiUrl,v.searchText=null,v.selectedItem=null,v.categoriesAC=[],v.querySearch=p,v.searchProd=void 0;var f;v.addToCart=u,v.cartItems=n.cartArray,v.totalItem=d,v.getNewProductsFromHttpServer=function(e){var t=l.confirm().title("Reset Cart").textContent("This will reset the carts contents and fetch new data").ariaLabel("Lucky day").targetEvent(e).ok("Ok ").cancel("Cancel");l.show(t).then(function(){n.cartArray.length=0,v.cleanProductVariables(),v.getProducts()},function(){})},v.changeAPI=function(e){var t=l.prompt().title("Place the Url of the API").placeholder("API Url").ariaLabel("API Url").initialValue("").targetEvent(e).ok("Go").cancel("Cancel");l.show(t).then(function(e){v.apiUrl=e,v.getNewProductsFromHttpServer()},function(){})},v.showSimpleToast=function(e){i.show(i.simple().textContent(e).position("top right").hideDelay(500))},v.deleteRowCallback=function(e){console.log("rows",e),s.remove(v.cartItems,function(t){return s.contains(e,t.id)}),console.log("items",v.cartItems)},v.cleanProductVariables=function(){v.products=[],v.categories=[],v.categoriesAC=[]},v.getProducts=function(){e.getProducts(v.apiUrl).get({}).$promise.then(function(e){v.products=e.products,v.categories=s.pluck(e.categories,"name");for(var t=0;t<v.products.length;t++){v.products[t].price=parseInt(v.products[t].price);for(var r=0;r<v.products[t].categories.length;r++)v.products[t].categories[r]=s.result(s.find(e.categories,function(e){return e.categori_id==v.products[t].categories[r]}),"name")}for(var t=0;t<v.categories.length;t++)v.categoriesAC.push({display:v.categories[t],value:v.categories[t]});console.log("listProducts",v.products),v.Allproducts=s.clone(v.products),console.log("categoriesAC",v.categoriesAC)})},v.getProducts(),v.searchText&&(v.search.categories=[v.searchText.value]),v.openMenu=function(e,t){f=t,e(t)},c.$watch("productCtrl.searchR",function(e){switch(e){case"1":v.search={available:!0};break;case"2":v.search={available:!1};break;case"3":v.search={best_seller:!0};break;default:v.search=void 0}}),c.$watch("productCtrl.selectedItem",function(e,t){if(e){var r=s.filter(v.products,s.matches({categories:[e.value]}));v.products=s.clone(r)}else v.products=s.clone(v.Allproducts)}),c.onSwipeRight=function(e){g()},v.tableData={data:v.nutritionList,"column-keys":["name","calories","fat","carbs","protein","sodium","calcium","iron"]}}e.$inject=["productService","$mdSidenav","$mdBottomSheet","$timeout","$log","_","$scope","CartFactory","$mdToast","$mdDialog"],angular.module("andresshop.products").controller("ProductController",e)}(),function(){"use strict";function e(e,t,r){var a="http://www.mocky.io/v2/58115c3b3a0000a20d6098d4",o=function(t){return e(t,{},{get:{method:"GET",isArray:!1}})},s=function(e){a=e},c={getProducts:o,changeHttpServer:s,apiUrl:a};return c}e.$inject=["$resource","$q","BASE_API_URI"],angular.module("andresshop.products").service("productService",["$resource","$q",e])}();
+(function(){
+    'use strict';
+    angular
+    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute', 'mdDataTable'])
+    .config(['$mdThemingProvider', '$mdIconProvider', '$routeProvider', '$locationProvider', function($mdThemingProvider, $mdIconProvider, $routeProvider, $locationProvider){
+
+        // $locationProvider.html5Mode(true);
+        $routeProvider
+            .when("/", {
+                templateUrl : "main.html"
+            })
+            .when("/cart", {
+                templateUrl : "cart.html"
+            });
+
+        $mdIconProvider
+            .defaultIconSet("./assets/svg/avatars.svg", 128)
+            .icon("star", "./assets/svg/star.svg", 24)
+            .icon("cart", "./assets/svg/cart.svg", 24)
+            .icon("error", "./assets/svg/error.svg", 24)
+            .icon("check", "./assets/svg/check.svg", 24)
+            .icon("filter", "./assets/svg/filter.svg", 24)
+            .icon("search", "./assets/svg/search.svg", 24)
+            .icon("add_cart", "./assets/svg/add_cart.svg", 24)
+            .icon("credit", "./assets/svg/credit_card.svg", 24)
+            .icon("remove_cart", "./assets/svg/remove_cart.svg", 24)
+            .icon("menu"       , "./assets/svg/menu.svg"        , 24)
+            .icon("share"      , "./assets/svg/share.svg"       , 24)
+            .icon("google_plus", "./assets/svg/google_plus.svg" , 512)
+            .icon("hangouts"   , "./assets/svg/hangouts.svg"    , 512)
+            .icon("twitter"    , "./assets/svg/twitter.svg"     , 512)
+            .icon("phone"      , "./assets/svg/phone.svg"       , 512);
+
+            $mdThemingProvider.theme('default')
+                .primaryPalette('deep-orange')
+                .accentPalette('blue')
+                .warnPalette('red');
+
+            $mdThemingProvider.enableBrowserColor({
+                theme: 'default', // Default is 'default'
+                palette: 'deep-orange', // Default is 'primary', any basic material palette and extended palettes are available
+                hue: '800' // Default is '800'
+            });
+
+    }])
+    .constant('_', window._);
+})();
+
+(function(){
+  'use strict';
+
+  // Prepare the 'products' module for subsequent registration of controllers and delegates
+  angular.module('andresshop.cart', [ 'ngMaterial']);
+
+
+})();
+(function(){
+  'use strict';
+
+  // Prepare the 'products' module for subsequent registration of controllers and delegates
+  angular.module('andresshop.products', [ 'ngMaterial', 'andresshop.cart']);
+
+
+})();
+(function iife() {
+  'use strict';
+
+  CartFactory.$inject = ['_'];
+  angular
+    .module('andresshop.cart')
+    .factory('CartFactory', CartFactory);
+
+  /* @ngInject */
+  function CartFactory(_) {
+
+    var cartArray = [];
+    
+    var service = {
+      confirm: confirm,
+      addToCart: addToCart,
+      cartArray: cartArray,
+      cleanCart: cleanCart
+    };
+    return service;
+
+    ////////////////
+
+    function addToCart(product) {
+
+      var isIn = _.find(cartArray, _.identity(product));
+
+      if (isIn == undefined) {
+        product.cant = 1;
+        product.subTotal = product.price;
+        cartArray.push(product);
+      } else {
+        isIn.cant += 1;
+        isIn.subTotal = isIn.cant * isIn.price; 
+      }      
+      
+    }
+
+    function cleanCart(){
+      cartArray = [];
+    }
+
+    function removeFromCart(product) {
+      _.reject(cartArray, product);
+    }
+
+  }
+})();
+
+(function(){
+  'use strict';
+  ProductController.$inject = ['productService', '$mdSidenav', '$mdBottomSheet', '$timeout', '$log', '_', '$scope', 'CartFactory', '$mdToast', '$mdDialog'];
+  angular
+       .module('andresshop.products')
+       .controller('ProductController', ProductController);
+
+  /**
+   * Main Controller for the Angular Material Starter App
+   * @param $mdSidenav
+   * @param avatarsService
+   * @constructor
+   */
+
+   /* @ngInject */
+  function ProductController( productService, $mdSidenav, $mdBottomSheet, $timeout, $log, _, $scope, CartFactory, $mdToast, $mdDialog) {
+    var self = this;
+
+    self.search;
+    self.searchR;
+    self.orderBy      = null;
+    self.selected     = null;
+    self.products     = [];
+    self.categories   = [];
+    self.toggleList   = toggleList;
+    self.apiUrl       = productService.apiUrl;
+    
+    /*filter categories */
+    self.searchText   = null;
+    self.selectedItem = null;
+    self.categoriesAC = [];
+    self.querySearch  = querySearchCategory;
+
+    /*Search Product */
+    self.searchProd      = undefined;
+    var originatorEv;
+    self.addToCart = addToCart;
+
+    self.cartItems = CartFactory.cartArray;
+    self.totalItem = totalItem;
+
+    function addToCart(product) {
+      CartFactory.addToCart(product);
+      self.showSimpleToast('Added to cart');
+      
+    }
+
+    function totalItem() {
+      return _.sum(self.cartItems, function(item){
+        return item.cant*item.price;
+      });
+    }
+
+    self.showMessage = function methodName(ev) {
+      $mdDialog.show(
+            $mdDialog.alert()
+              .clickOutsideToClose(true)
+              .title('This is a Demo')
+              .textContent('You can not pay at this moment')
+              .ariaLabel('Dialog')
+              .ok('Got it!')
+              .targetEvent(ev)
+          );
+    };
+
+    self.getNewProductsFromHttpServer = function(ev){
+
+      var confirm = $mdDialog.confirm()
+                .title('Reset Cart')
+                .textContent('This will reset the carts contents and fetch new data')
+                .ariaLabel('Lucky day')
+                .targetEvent(ev)
+                .ok('Ok ')
+                .cancel('Cancel');
+
+          $mdDialog.show(confirm).then(function() {
+              CartFactory.cartArray.length = 0;
+              self.cleanProductVariables();
+              self.getProducts();
+          }, function() {
+            
+          });
+
+      
+    };
+
+
+    self.changeAPI = function(ev) {
+    // Appending dialog to document.body to cover sidenav in docs app
+    var confirm = $mdDialog.prompt()
+      .title('Place the Url of the API')
+      .placeholder('API Url')
+      .ariaLabel('API Url')
+      .initialValue('')
+      .targetEvent(ev)
+      .ok('Go')
+      .cancel('Cancel');
+
+    $mdDialog.show(confirm).then(function(result) {
+      self.apiUrl = result;
+      self.getNewProductsFromHttpServer();
+    }, function() {
+
+    });
+  };
+
+
+
+    self.showSimpleToast = function(message) {
+
+
+    $mdToast.show(
+      $mdToast.simple()
+        .textContent(message)
+        .position('top right')
+        .hideDelay(500)
+    );
+  };
+    self.deleteRowCallback = function(rows){
+      console.log("rows", rows);
+      _.remove(self.cartItems, function(item){
+        return _.contains(rows, item.id);
+      });
+      console.log('items', self.cartItems);
+    }
+
+
+    self.cleanProductVariables = function(){
+      self.products = [];
+      self.categories = [];
+      self.categoriesAC = [];
+    };
+    // Load all products registered 
+
+    self.getProducts = function(){
+      productService.getProducts(self.apiUrl).get({}).$promise
+      .then(function (listProducts) {
+        self.products = listProducts.products;
+        self.categories = _.pluck(listProducts.categories, 'name');
+
+        for (var i = 0; i < self.products.length; i++) {
+          self.products[i].price = parseInt(self.products[i].price);
+          for (var j= 0; j < self.products[i].categories.length; j++) {
+            self.products[i].categories[j] = _.result(_.find(listProducts.categories, function(chr) {
+                return chr.categori_id == self.products[i].categories[j];
+              }), 'name');
+          }
+          
+        }
+
+        for (var i = 0; i < self.categories.length; i++) {
+          self.categoriesAC.push({display: self.categories[i], value: self.categories[i]});
+        }
+        console.log('listProducts', self.products);
+        self.Allproducts = _.clone(self.products);
+        console.log('categoriesAC', self.categoriesAC);
+      });
+    };
+    self.getProducts();
+
+    if (!!self.searchText) {
+      self.search.categories = [self.searchText.value];
+    }
+
+
+
+   self.openMenu = function($mdOpenMenu, ev) {
+    originatorEv = ev;
+    $mdOpenMenu(ev);
+  };
+
+    // *********************************
+    // Internal methods
+    // *********************************
+
+    /**
+     * Hide or Show the 'left' sideNav area
+     */
+    function toggleList() {
+
+      $mdSidenav('left').toggle();
+      console.log('lok',$mdSidenav('left').isLockedOpen());
+    }
+
+    /*
+    * query search Category for autocomplete
+    */
+
+    function querySearchCategory (query) {
+      var results = query ? self.categoriesAC.filter( createFilterFor(query) ) : self.categoriesAC;
+
+      return results;
+    }
+
+    /**
+     * Create filter function for a query string
+     */
+    function createFilterFor(query) {
+      var lowercaseQuery = angular.lowercase(query);
+
+      return function filterFn(state) {
+        return (state.value.indexOf(lowercaseQuery) === 0);
+      };
+
+    }
+
+    $scope.$watch('productCtrl.searchR', function(value) {
+      self.products = _.clone(self.Allproducts);
+      switch(value){
+        case '1': 
+          self.search = {available: true};
+          break;
+        case '2':
+          self.search = {available: false};
+          break;
+        case '3':
+          self.search = {best_seller: true};
+          break;
+        case '4':
+          _.remove(self.products, function (item) {
+            console.log('item', item.price);
+            return item.price < 30000;
+          });
+          break;
+        case '5':
+          _.remove(self.products, function (item) {
+            console.log('item', item.price);
+            return item.price  > 10000;
+          });
+          break;
+        default:
+          self.search = undefined;
+          break;
+      }
+    });
+
+    $scope.$watch('productCtrl.selectedItem', function(newV, old) {
+      if (!!newV) {
+        var temp = _.filter(self.products, _.matches({ 'categories': [newV.value] }));
+        self.products = _.clone(temp);
+      } else {
+        self.products = _.clone(self.Allproducts);
+      }
+    });
+
+
+
+    $scope.onSwipeRight = function(ev) {
+      toggleList();
+    };
+    
+    self.tableData = {
+                      data: self.nutritionList,
+                      'column-keys': [
+                          'name',
+                          'calories',
+                          'fat',
+                          'carbs',
+                          'protein',
+                          'sodium',
+                          'calcium',
+                          'iron'
+                      ]
+                      };
+
+    
+  }
+
+})();
+
+(function(){
+  'use strict';
+
+  productService.$inject = ['$resource', '$q', 'BASE_API_URI'];
+  angular.module('andresshop.products')
+         .service('productService', ['$resource','$q', productService]);
+
+  /**
+   * Users DataService
+   * Uses embedded, hard-coded data model; acts asynchronously to simulate
+   * remote data service call(s).
+   *
+   * @returns {{loadAll: Function}}
+   * @constructor
+   */
+
+   /* @ngInject */
+  function productService($resource, $q, BASE_API_URI){
+
+    var apiUrl = 'http://www.mocky.io/v2/58115c3b3a0000a20d6098d4';
+
+    var getProducts = function(httpServerUrl){
+      return $resource(httpServerUrl, {},
+            {
+
+              get: {
+                method: 'GET',
+                isArray: false
+              }
+            });
+    };
+
+    var changeHttpServer = function(newUrl){
+
+      apiUrl = newUrl;
+
+    };
+
+    var service = {
+      getProducts: getProducts,
+      changeHttpServer: changeHttpServer,
+      apiUrl: apiUrl
+    };
+
+    return service;
+  }
+
+})();

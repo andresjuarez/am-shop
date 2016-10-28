@@ -48,7 +48,7 @@
                 <md-list-item class="md-3-line" ng-repeat="item in productCtrl.cartItems track by $index ">
                  <img ng-src="{{item.img}}" class="md-avatar" alt="{{item.name}}" />
                  <div class="md-list-item-text" layout="column">
-                   <h4>{{item.name}} - cant: {{item.cant}}</h4>
+                   <h4>{{item.name}} - Qty: {{item.cant}}</h4>
 
                  </div>
                </md-list-item>
@@ -95,6 +95,8 @@
               <md-radio-button value='1' > Available</md-radio-button>
               <md-radio-button value='2' > Sold out </md-radio-button>
               <md-radio-button value='3' > Best Seller</md-radio-button>
+              <md-radio-button value='4' > Price over 30k$ </md-radio-button>
+              <md-radio-button value='5' > Price under 10k$ </md-radio-button>
 
             </md-radio-group>
 
@@ -105,7 +107,9 @@
               <md-radio-button value="-name" >Name: Z - A</md-radio-button>
               <md-radio-button value="price"> Lower price </md-radio-button>
               <md-radio-button value="-price">Higher price</md-radio-button>
-
+            </md-radio-group>
+            <md-radio-group ng-model="productCtrl.orderByPrice">
+              
             </md-radio-group>
 
           

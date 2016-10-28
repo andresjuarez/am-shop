@@ -30,7 +30,7 @@
 </div>
 
  -->
-<mdt-table table-card="{title: 'Shopping Cart'}"  
+  <mdt-table hide-xs table-card="{title: 'Shopping Cart'}"  
              selectable-rows="true" 
              alternate-headers="'contextual'"
              delete-row-callback="productCtrl.deleteRowCallback(rows)" 
@@ -48,7 +48,7 @@
     <mdt-header-row>
       <mdt-column align-rule="left">Image</mdt-column>
       <mdt-column align-rule="right">Name</mdt-column>
-      <mdt-column align-rule="right" editable-field="textInput">Qty</mdt-column>
+      <mdt-column align-rule="right">Qty</mdt-column>
       <mdt-column align-rule="right">Price</mdt-column>
       <mdt-column align-rule="right">Sub-total</mdt-column>
     </mdt-header-row>
@@ -65,18 +65,45 @@
         </mdt-custom-cell>
   </mdt-table>
 
-  <md-card>
-    <md-card-title>
-      <md-card-title-text>
-        <h2>Total</h2>
-        <h3>{{productCtrl.totalItem() | currency}}</h3>
-      </md-card-title-text>
-    </md-card-title>
-    
-    <md-card-actions layout="row" layout-align="end center">
-      <md-button>Proceed to Checkout</md-button>
-    </md-card-actions>
-  </md-card>
+  <mdt-table hide-gt-xs table-card="{title: 'Shopping Cart'}"  
+             selectable-rows="true" 
+             alternate-headers="'contextual'"
+             delete-row-callback="productCtrl.deleteRowCallback(rows)" 
+             mdt-row="{
+                      data: productCtrl.cartItems,
+                      'table-row-id-key': 'id',
+                      'column-keys': [
+                          'name',
+                          'cant',
+                          'subTotal'
+                      ]
+                      }">
+    <mdt-header-row>
+      <mdt-column align-rule="right">Name</mdt-column>
+      <mdt-column align-rule="right">Qty</mdt-column>
+      <mdt-column align-rule="right">Sub-total</mdt-column>
+    </mdt-header-row>
+        <mdt-custom-cell column-key="subTotal">
+            {{value | currency}}
+        </mdt-custom-cell>
+  </mdt-table>
+
+  <div layout="row">
+    <md-card layout-fill>
+      <md-card-title>
+        <md-card-title-text>
+          <h2>Total</h2>
+          <h3>{{productCtrl.totalItem() | currency}}</h3>
+        </md-card-title-text>
+      </md-card-title>
+      
+      <md-card-actions layout="row" layout-align="end center">
+        <md-button class="md-raised md-accent" ng-click="productCtrl.showMessage()">
+        <md-icon md-svg-icon="credit" ></md-icon> Proceed to Checkout</md-button>
+      </md-card-actions>
+    </md-card>
+  </div>
+ 
 
 <!-- 
   <mdt-table table-card="{title: 'Shopping Cart'}" selectable-rows="true" alternate-headers="'contextual'" delete-row-callback="deleteRowCallback(rows)" save-row-callback="productCtrl.saveRowCallback(row, id)">

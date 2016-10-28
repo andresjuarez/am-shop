@@ -9,14 +9,14 @@
           <md-list class="product-list">
             <md-list-item class="custom-md-list" ng-repeat="prod in productCtrl.products | filter: productCtrl.search | filter: {name: productCtrl.searchProd} | orderBy: productCtrl.orderBy">
               <div class="item">
-                <h3 class="md-title">{{prod.name}}</h3>
+                <h2 class="md-title">{{prod.name}}</h2>
                 <img class="item-image" ng-src="{{prod.img}}">
                 <div class="item-info">
-                  <div flex class="mini-header"> 
-                    <span flex="30" >Price: {{prod.price | currency}}</span> 
-                    <span flex="60" class="tag-prod soldout" ng-hide="prod.available"><md-icon md-svg-icon="error"></md-icon>SOLD OUT</span>
-                    <span flex="60" class="tag-prod available" ng-show="prod.available"><md-icon md-svg-icon="check"></md-icon>Available</span>
-                    <span flex="60" class="tag-prod bestseller" ng-show="prod.best_seller"><md-icon md-svg-icon="star"></md-icon>Best Seller</span>
+                  <h4 >Price: {{prod.price | currency}}</h4> 
+                  <div layout-xs class="mini-header"> 
+                    <span class="tag-prod soldout" ng-hide="prod.available"><md-icon md-svg-icon="error"></md-icon>SOLD OUT</span>
+                    <span class="tag-prod available" ng-show="prod.available"><md-icon md-svg-icon="check"></md-icon>Available</span>
+                    <span class="tag-prod bestseller" ng-show="prod.best_seller"><md-icon md-svg-icon="star"></md-icon>Best Seller</span>
                   </div>
                   <p> ID {{prod.id}}</p>
                   <p> <span ng-show="prod.categories.length > 1">Categories</span><span ng-show="prod.categories.length == 1">Category</span>: <span ng-repeat="cat in prod.categories">{{cat}}<span ng-hide="$last">,</span> </span> </p>
