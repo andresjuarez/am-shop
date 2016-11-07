@@ -1,7 +1,7 @@
 (function(){
     'use strict';
     angular
-    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute', 'mdDataTable'])
+    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute', 'mdDataTable', 'andresshop.cube'])
     .config(function($mdThemingProvider, $mdIconProvider, $routeProvider, $locationProvider){
 
         // $locationProvider.html5Mode(true);
@@ -11,6 +11,9 @@
             })
             .when("/cart", {
                 templateUrl : "cart.html"
+            })
+            .when("/cube", {
+                templateUrl : "cube.html"
             });
 
         $mdIconProvider

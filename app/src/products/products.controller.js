@@ -41,7 +41,7 @@
     self.isCart = false;
 
     $scope.$on('$routeChangeSuccess', function(scope, next, current){
-      if(next.$$route.originalPath == '/cart') {
+      if(next.$$route.originalPath == '/cart' || next.$$route.originalPath == '/cube') {
         self.isCart = true;
       } else {
         self.isCart = false;
