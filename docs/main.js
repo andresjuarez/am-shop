@@ -19,6 +19,7 @@
         $mdIconProvider
             .defaultIconSet("./assets/svg/avatars.svg", 128)
             .icon("star", "./assets/svg/star.svg", 24)
+            .icon("cube", "./assets/svg/cube.svg", 24)
             .icon("cart", "./assets/svg/cart.svg", 24)
             .icon("error", "./assets/svg/error.svg", 24)
             .icon("check", "./assets/svg/check.svg", 24)

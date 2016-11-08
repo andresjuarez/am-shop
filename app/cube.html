@@ -1,6 +1,5 @@
 <div ng-controller="CubeController as cubeCtrl">
   <form name="sizeForm">
-  {{ sizeForm.matrixSize.$error | json }}
     <md-input-container class="md-block">
       <label>Matrix size</label>
       <input required type="number" name="matrixSize" ng-model="cubeCtrl.matrixsize"
@@ -13,7 +12,7 @@
       </div>
     </md-input-container>
     <div>
-      <md-button type="submit" ng-disabled="!sizeForm.matrixSize.$valid" ng-click="cubeCtrl.generateMatrix()">Submit</md-button>
+      <md-button type="submit" ng-disabled="!sizeForm.matrixSize.$valid" ng-click="cubeCtrl.generateMatrix()" class="md-raised md-primary">Submit</md-button>
     </div>
 
   </form>
@@ -63,19 +62,19 @@
         </div>
       </md-input-container>
       <div>
-        <md-button type="submit" ng-click="cubeCtrl.updateMatrix()">Submit</md-button>
+        <md-button type="submit" ng-disabled="updateMat.$invalid" ng-click="cubeCtrl.updateMatrix()" class="md-raised md-accent" >Update</md-button>
       </div>
     </form>
 
     <h3>Cube Summation</h3>
-    <form name="updateMat">
+    <form name="sumationForm">
       <h4>From</h4>
       <md-input-container flex="33">
         <label>x</label>
         <input required type="number" name="x" ng-model="cubeCtrl.begX"
                ng-min="1" ng-max="cubeCtrl.matrixsize"  />
 
-        <div ng-messages="updateMat.x.$error" role="alert">
+        <div ng-messages="sumationForm.x.$error" role="alert">
           <div ng-message="required">Field required</div>
           <div ng-message="min">Must be greater than 0</div>
           <div ng-message="max">Must be less than matrix size</div>
@@ -86,7 +85,7 @@
         <input required type="number" name="y" ng-model="cubeCtrl.begY"
                ng-min="1" ng-max="cubeCtrl.matrixsize"  />
 
-        <div ng-messages="updateMat.y.$error" role="alert">
+        <div ng-messages="sumationForm.y.$error" role="alert">
           <div ng-message="required">Field required</div>
           <div ng-message="min">Must be greater than 0</div>
           <div ng-message="max">Must be less than matrix size</div>
@@ -97,7 +96,7 @@
         <input required type="number" name="z" ng-model="cubeCtrl.begZ"
                ng-min="1" ng-max="cubeCtrl.matrixsize"  />
 
-        <div ng-messages="updateMat.z.$error" role="alert">
+        <div ng-messages="sumationForm.z.$error" role="alert">
           <div ng-message="required">Field required</div>
           <div ng-message="min">Must be greater than 0</div>
           <div ng-message="max">Must be less than matrix size</div>
@@ -106,10 +105,10 @@
       <h4>To</h4>
       <md-input-container flex="33">
         <label>x</label>
-        <input required type="number" name="x" ng-model="cubeCtrl.topX"
+        <input required type="number" name="xx" ng-model="cubeCtrl.topX"
                ng-min="1" ng-max="cubeCtrl.matrixsize"  />
 
-        <div ng-messages="updateMat.x.$error" role="alert">
+        <div ng-messages="sumationForm.xx.$error" role="alert">
           <div ng-message="required">Field required</div>
           <div ng-message="min">Must be greater than 0</div>
           <div ng-message="max">Must be less than matrix size</div>
@@ -117,10 +116,10 @@
       </md-input-container>
       <md-input-container flex="33">
         <label>y</label>
-        <input required type="number" name="y" ng-model="cubeCtrl.topY"
+        <input required type="number" name="yy" ng-model="cubeCtrl.topY"
                ng-min="1" ng-max="cubeCtrl.matrixsize"  />
 
-        <div ng-messages="updateMat.y.$error" role="alert">
+        <div ng-messages="sumationForm.yy.$error" role="alert">
           <div ng-message="required">Field required</div>
           <div ng-message="min">Must be greater than 0</div>
           <div ng-message="max">Must be less than matrix size</div>
@@ -128,10 +127,10 @@
       </md-input-container>
       <md-input-container flex="33">
         <label>z</label>
-        <input required type="number" name="z" ng-model="cubeCtrl.topZ"
+        <input required type="number" name="zz" ng-model="cubeCtrl.topZ"
                ng-min="1" ng-max="cubeCtrl.matrixsize"  />
 
-        <div ng-messages="updateMat.z.$error" role="alert">
+        <div ng-messages="sumationForm.zz.$error" role="alert">
           <div ng-message="required">Field required</div>
           <div ng-message="min">Must be greater than 0</div>
           <div ng-message="max">Must be less than matrix size</div>
@@ -139,7 +138,7 @@
       </md-input-container>
       
       <div>
-        <md-button type="submit" ng-click="cubeCtrl.sumMatrix()">Submit</md-button>
+        <md-button type="submit" ng-disabled="sumationForm.$invalid" ng-click="cubeCtrl.sumMatrix()" class="md-raised md-accent">Sumation</md-button>
       </div>
 
       <h2>Summation total: {{cubeCtrl.sumMatrixV}}</h2>
