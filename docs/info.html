@@ -1,0 +1,22 @@
+<div>
+  <p> <b>Capa del cliente</b> Esta capa esejecutada en el navegador, en ella se crea una interfaz siguiendo los principios del diseño Material lo cual aporta un buen nivel de UX </p>
+  <p>Esta capa consta para su construcción de herramientas como: </p>
+  <ul>
+    <li>AngularJS</li>
+    <li>Angular Material</li>
+    <li>Gulp (solo para uso en ambiente de desarrollo y generar el ambiente de producción)</li>
+  </ul>
+  <p></p>
+  <p> <b>Lógica del lado del cliente</b> Al utilizar Angular se puede dividir el trabajo en módulos, para realizar un trabajo de forma ordenada. Esta lógica se encuentra modularizada de la siguiente manera: </p>
+    <ul>
+      <li>products.controller: encargado del listado de los productos, asi como funciones como filtrado y búsqueda de los mismos</li>
+      <li>cart.controller: encargado de la lógica del carrito de compra</li>
+      <li>cube.controller: encargado de la lógica del problema de HackerRank <a href="https://www.hackerrank.com/challenges/cube-summation" target="_blank">cube summation</a> </li>
+    </ul>
+
+  <p> <b>Capa de Persistencia</b> Esta capa almacena en LocalStorage del navegador la data, para conservar una persistencia de los datos, y de esta manera si recarga la página no se pierdan los datos (Sólo disponible en el problema de Cube Summation) esta capa esta compuesta por: </p>
+  <ul>
+    <li>persistence.service.js: En este factory se encuentran las funciones de SET y GET de las variables en LoaclStorage, se realiza como un factory para poder ser utilizado en cualquier módulo de la app</li>
+  </ul>
+
+</div>

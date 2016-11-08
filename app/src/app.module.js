@@ -1,7 +1,7 @@
 (function(){
     'use strict';
     angular
-    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute', 'mdDataTable', 'andresshop.cube'])
+    .module('andresshop', ['ngMaterial', 'ngResource', 'angular-lodash', 'andresshop.products', 'ngRoute', 'mdDataTable', 'andresshop.cube', 'andresshop.persistence'])
     .config(function($mdThemingProvider, $mdIconProvider, $routeProvider, $locationProvider){
 
         // $locationProvider.html5Mode(true);
@@ -14,11 +14,15 @@
             })
             .when("/cube", {
                 templateUrl : "cube.html"
+            })
+            .when("/info", {
+                templateUrl : "info.html"
             });
 
         $mdIconProvider
             .defaultIconSet("./assets/svg/avatars.svg", 128)
             .icon("star", "./assets/svg/star.svg", 24)
+            .icon("info", "./assets/svg/info.svg", 24)
             .icon("cube", "./assets/svg/cube.svg", 24)
             .icon("cart", "./assets/svg/cart.svg", 24)
             .icon("error", "./assets/svg/error.svg", 24)

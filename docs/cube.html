@@ -1,7 +1,9 @@
 <div ng-controller="CubeController as cubeCtrl">
   <form name="sizeForm">
+    <h3 ng-if="!!cubeCtrl.previousMatrixSize">You already have a previous Matrix with size {{cubeCtrl.previousMatrixSize}} </h3>
+    <h4 ng-if="!!cubeCtrl.previousMatrixSize">If you decide update the size, you will lose any previuos change</h4>
     <md-input-container class="md-block">
-      <label>Matrix size</label>
+      <label> <span ng-if="!!cubeCtrl.previousMatrixSize">Update</span> Matrix size</label>
       <input required type="number" name="matrixSize" ng-model="cubeCtrl.matrixsize"
              ng-min="1" ng-max="100" />
 
@@ -17,7 +19,7 @@
 
   </form>
 
-  <div ng-if="cubeCtrl.matrixCreated">
+  <div ng-if="cubeCtrl.matrixCreated || !!cubeCtrl.previousMatrixSize">
     <h3>Update Matrix</h3>
     <form name="updateMat">
       <md-input-container flex="33">
@@ -142,7 +144,9 @@
       </div>
 
       <h2>Summation total: {{cubeCtrl.sumMatrixV}}</h2>
+
     </form>
+    <md-button type="" ng-click="cubeCtrl.resetLocalStorage()" class="md-raised md-primary">Reset Local Storage</md-button>
   </div>
 </div>
   
